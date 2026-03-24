@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Settings {
+class ST404_WPA_Settings {
 
 	/**
 	 * Register hooks.
@@ -82,8 +82,8 @@ class WPA_Settings {
 		$methods                       = array( 'manual', 'percent_global', 'fixed_plus_percent' );
 		$method                        = $input['payment_fee_method'] ?? 'manual';
 		$output['payment_fee_method']  = in_array( $method, $methods, true ) ? $method : 'manual';
-		$output['payment_fee_fixed']   = (string) wpa_sanitize_decimal( $input['payment_fee_fixed'] ?? '0' );
-		$output['payment_fee_percent'] = (string) wpa_sanitize_decimal( $input['payment_fee_percent'] ?? '0' );
+		$output['payment_fee_fixed']   = (string) st404_wpa_sanitize_decimal( $input['payment_fee_fixed'] ?? '0' );
+		$output['payment_fee_percent'] = (string) st404_wpa_sanitize_decimal( $input['payment_fee_percent'] ?? '0' );
 
 		$ranges                           = array( 'today', '7_days', '30_days', 'month', 'custom' );
 		$default_range                    = $input['dashboard_default_range'] ?? '30_days';

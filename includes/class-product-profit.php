@@ -9,21 +9,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Product_Profit {
+class ST404_WPA_Product_Profit {
 
 	/**
 	 * Calculator.
 	 *
-	 * @var WPA_Calculator
+	 * @var ST404_WPA_Calculator
 	 */
 	private $calculator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param WPA_Calculator $calculator Calculator.
+	 * @param ST404_WPA_Calculator $calculator Calculator.
 	 */
-	public function __construct( WPA_Calculator $calculator ) {
+	public function __construct( ST404_WPA_Calculator $calculator ) {
 		$this->calculator = $calculator;
 	}
 
@@ -48,10 +48,10 @@ class WPA_Product_Profit {
 		woocommerce_wp_text_input(
 			array(
 				'id'                => '_wpa_purchase_cost',
-				'label'             => esc_html__( 'Cout d'achat', 'wc-profit-analyzer' ),
+				'label'             => esc_html__( 'Cout d\'achat', 'wc-profit-analyzer' ),
 				'type'              => 'text',
 				'desc_tip'          => true,
-				'description'       => esc_html__( 'Cout d'achat unitaire utilise pour les calculs de rentabilite.', 'wc-profit-analyzer' ),
+				'description'       => esc_html__( 'Cout d\'achat unitaire utilise pour les calculs de rentabilite.', 'wc-profit-analyzer' ),
 				'custom_attributes' => array(
 					'step' => '0.01',
 					'min'  => '0',
@@ -73,7 +73,7 @@ class WPA_Product_Profit {
 		if ( ! current_user_can( 'edit_post', $product_id ) ) {
 			return;
 		}
-		$value = wpa_sanitize_decimal( wpa_get_request_text( '_wpa_purchase_cost', 'post' ) );
+		$value = st404_wpa_sanitize_decimal( st404_wpa_get_request_text( '_wpa_purchase_cost', 'post' ) );
 		update_post_meta( $product_id, '_wpa_purchase_cost', (string) $value );
 	}
 
@@ -89,7 +89,7 @@ class WPA_Product_Profit {
 		$value = get_post_meta( $variation->ID, '_wpa_variation_purchase_cost', true );
 		?>
 		<p class="form-row form-row-full">
-			<label><?php echo esc_html__( 'Cout d'achat', 'wc-profit-analyzer' ); ?></label>
+			<label><?php echo esc_html__( 'Cout d\'achat', 'wc-profit-analyzer' ); ?></label>
 			<input
 				type="text"
 				class="short"
@@ -116,7 +116,7 @@ class WPA_Product_Profit {
 			return;
 		}
 		$raw   = $_POST['wpa_variation_purchase_cost'][ $loop ] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$value = wpa_sanitize_decimal( wp_unslash( $raw ) );
+		$value = st404_wpa_sanitize_decimal( wp_unslash( $raw ) );
 		update_post_meta( $variation_id, '_wpa_variation_purchase_cost', (string) $value );
 	}
 
@@ -128,7 +128,7 @@ class WPA_Product_Profit {
 	 * @return array
 	 */
 	public function get_products_report( $date_from, $date_to ) {
-		$settings = WPA_Settings::get();
+		$settings = ST404_WPA_Settings::get();
 		$mode     = $settings['calc_mode'] ?? 'ht';
 		$order_ids = wc_get_orders(
 			array(
@@ -158,7 +158,7 @@ class WPA_Product_Profit {
 						'product_id'    => $product_id,
 						'name'          => $product ? $product->get_name() : __( '(Deleted product)', 'wc-profit-analyzer' ),
 						'sku'           => $product ? $product->get_sku() : '',
-						'purchase_cost' => wpa_sanitize_decimal( get_post_meta( $product_id, '_wpa_purchase_cost', true ) ),
+						'purchase_cost' => st404_wpa_sanitize_decimal( get_post_meta( $product_id, '_wpa_purchase_cost', true ) ),
 						'qty'           => 0,
 						'revenue'       => 0,
 						'cost_total'    => 0,
@@ -174,7 +174,7 @@ class WPA_Product_Profit {
 
 				$unit_cost = 0.0;
 				if ( $variation_id ) {
-					$unit_cost = wpa_sanitize_decimal( get_post_meta( $variation_id, '_wpa_variation_purchase_cost', true ) );
+					$unit_cost = st404_wpa_sanitize_decimal( get_post_meta( $variation_id, '_wpa_variation_purchase_cost', true ) );
 				}
 				if ( $unit_cost <= 0 ) {
 					$unit_cost = $rows[ $product_id ]['purchase_cost'];

@@ -4,7 +4,7 @@ Tags: woocommerce, profit, margin, analytics, reporting
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,27 @@ Yes, the plugin declares compatibility with WooCommerce custom order tables (HPO
 The plugin treats missing purchase cost as 0.
 
 == Changelog ==
+
+= 1.1.0 =
+* Stabilisation complete post-correctifs: anti-collisions de symboles PHP, apostrophes echappees, interface FR harmonisee et reactivation des mises a jour GitHub.
+
+= 1.0.10 =
+* Reactivation du module de mise a jour GitHub avec les protections anti-collision et anti-redeclaration conservees.
+
+= 1.0.9 =
+* Correctif fatal PHP : apostrophes echappees dans plusieurs chaines FR (class-order-profit, class-admin, class-product-profit, guide).
+
+= 1.0.8 =
+* Correctif anti-fatal additionnel : helpers encapsules par function_exists pour eviter les redeclarations si plusieurs copies du plugin sont chargees.
+
+= 1.0.7 =
+* Correctif anti-collision : renommage global des classes/fonctions PHP avec prefixe unique ST404_WPA / st404_wpa.
+
+= 1.0.6 =
+* Correctif d'activation : chargement du module de mise a jour GitHub desactive temporairement pour eliminer la source de fatal.
+
+= 1.0.5 =
+* Durcissement anti-fatal : garde class_exists autour de l'updater GitHub et bootstrap defensif.
 
 = 1.0.4 =
 * Correctif activation : renommage unique de la classe d'updater GitHub pour eviter les conflits de classes entre plugins.

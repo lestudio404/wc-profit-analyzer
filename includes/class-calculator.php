@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Calculator {
+class ST404_WPA_Calculator {
 
 	/**
 	 * Return full order metrics array.
@@ -51,7 +51,7 @@ class WPA_Calculator {
 	 * @return float
 	 */
 	public function get_order_revenue( $order ) {
-		$settings = WPA_Settings::get();
+		$settings = ST404_WPA_Settings::get();
 		$mode     = $settings['calc_mode'] ?? 'ht';
 		$revenue  = 0.0;
 
@@ -80,10 +80,10 @@ class WPA_Calculator {
 			$unit_cost    = 0.0;
 
 			if ( $variation_id ) {
-				$unit_cost = wpa_sanitize_decimal( get_post_meta( $variation_id, '_wpa_variation_purchase_cost', true ) );
+				$unit_cost = st404_wpa_sanitize_decimal( get_post_meta( $variation_id, '_wpa_variation_purchase_cost', true ) );
 			}
 			if ( $unit_cost <= 0 && $product_id ) {
-				$unit_cost = wpa_sanitize_decimal( get_post_meta( $product_id, '_wpa_purchase_cost', true ) );
+				$unit_cost = st404_wpa_sanitize_decimal( get_post_meta( $product_id, '_wpa_purchase_cost', true ) );
 			}
 
 			$total += max( 0, $unit_cost ) * max( 0, $qty );
@@ -99,14 +99,14 @@ class WPA_Calculator {
 	 * @return float
 	 */
 	public function get_order_shipping_cost( $order ) {
-		$settings = WPA_Settings::get();
+		$settings = ST404_WPA_Settings::get();
 		if ( 'yes' !== ( $settings['enable_shipping_cost'] ?? 'yes' ) ) {
 			return 0.0;
 		}
 
 		$manual = $order->get_meta( '_wpa_shipping_cost', true );
 		if ( '' !== $manual && null !== $manual ) {
-			return max( 0, wpa_sanitize_decimal( $manual ) );
+			return max( 0, st404_wpa_sanitize_decimal( $manual ) );
 		}
 
 		$mode = $settings['calc_mode'] ?? 'ht';
@@ -125,14 +125,14 @@ class WPA_Calculator {
 	public function get_order_payment_fee( $order ) {
 		$manual = $order->get_meta( '_wpa_payment_fee', true );
 		if ( '' !== $manual && null !== $manual ) {
-			return max( 0, wpa_sanitize_decimal( $manual ) );
+			return max( 0, st404_wpa_sanitize_decimal( $manual ) );
 		}
 
-		$settings = WPA_Settings::get();
+		$settings = ST404_WPA_Settings::get();
 		$method   = $settings['payment_fee_method'] ?? 'manual';
 		$revenue  = $this->get_order_revenue( $order );
-		$fixed    = wpa_sanitize_decimal( $settings['payment_fee_fixed'] ?? '0' );
-		$percent  = wpa_sanitize_decimal( $settings['payment_fee_percent'] ?? '0' );
+		$fixed    = st404_wpa_sanitize_decimal( $settings['payment_fee_fixed'] ?? '0' );
+		$percent  = st404_wpa_sanitize_decimal( $settings['payment_fee_percent'] ?? '0' );
 
 		if ( 'percent_global' === $method ) {
 			return max( 0, $revenue * ( $percent / 100 ) );
@@ -151,7 +151,7 @@ class WPA_Calculator {
 	 * @return float
 	 */
 	public function get_order_extra_cost( $order ) {
-		return max( 0, wpa_sanitize_decimal( $order->get_meta( '_wpa_extra_cost', true ) ) );
+		return max( 0, st404_wpa_sanitize_decimal( $order->get_meta( '_wpa_extra_cost', true ) ) );
 	}
 
 	/**

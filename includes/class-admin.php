@@ -9,29 +9,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Admin {
+class ST404_WPA_Admin {
 
 	/**
 	 * Calculator.
 	 *
-	 * @var WPA_Calculator
+	 * @var ST404_WPA_Calculator
 	 */
 	private $calculator;
 
 	/**
 	 * Product profit.
 	 *
-	 * @var WPA_Product_Profit
+	 * @var ST404_WPA_Product_Profit
 	 */
 	private $product_profit;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param WPA_Calculator    $calculator Calculator.
-	 * @param WPA_Product_Profit $product_profit Product module.
+	 * @param ST404_WPA_Calculator    $calculator Calculator.
+	 * @param ST404_WPA_Product_Profit $product_profit Product module.
 	 */
-	public function __construct( WPA_Calculator $calculator, WPA_Product_Profit $product_profit ) {
+	public function __construct( ST404_WPA_Calculator $calculator, ST404_WPA_Product_Profit $product_profit ) {
 		$this->calculator    = $calculator;
 		$this->product_profit = $product_profit;
 	}
@@ -118,7 +118,7 @@ class WPA_Admin {
 	 */
 	public function render_dashboard_page() {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Vous n'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
+			wp_die( esc_html__( 'Vous n\'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
 		}
 		$range = $this->get_range_params();
 		$data  = $this->get_orders_metrics_for_period( $range['from'], $range['to'] );
@@ -132,7 +132,7 @@ class WPA_Admin {
 	 */
 	public function render_orders_page() {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Vous n'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
+			wp_die( esc_html__( 'Vous n\'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
 		}
 		$range = $this->get_range_params();
 		$data  = $this->get_orders_metrics_for_period( $range['from'], $range['to'] );
@@ -146,7 +146,7 @@ class WPA_Admin {
 	 */
 	public function render_products_page() {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Vous n'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
+			wp_die( esc_html__( 'Vous n\'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
 		}
 		$range = $this->get_range_params();
 		$rows  = $this->product_profit->get_products_report( $range['from'], $range['to'] );
@@ -160,9 +160,9 @@ class WPA_Admin {
 	 */
 	public function render_settings_page() {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Vous n'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
+			wp_die( esc_html__( 'Vous n\'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
 		}
-		$settings = WPA_Settings::get();
+		$settings = ST404_WPA_Settings::get();
 		include WPA_PLUGIN_DIR . 'admin/views/settings.php';
 	}
 
@@ -173,7 +173,7 @@ class WPA_Admin {
 	 */
 	public function render_guide_page() {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Vous n'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
+			wp_die( esc_html__( 'Vous n\'avez pas les droits pour acceder a cette page.', 'wc-profit-analyzer' ) );
 		}
 		include WPA_PLUGIN_DIR . 'admin/views/guide.php';
 	}
@@ -200,7 +200,7 @@ class WPA_Admin {
 		header( 'Content-Disposition: attachment; filename=wpa-orders-' . gmdate( 'Ymd-His' ) . '.csv' );
 
 		$output = fopen( 'php://output', 'w' );
-		fputcsv( $output, array( 'Commande', 'Date', 'Chiffre d'affaires', 'Cout produit', 'Cout expedition', 'Frais de paiement', 'Cout additionnel', 'Profit net', 'Marge %' ) );
+		fputcsv( $output, array( 'Commande', 'Date', 'Chiffre d\'affaires', 'Cout produit', 'Cout expedition', 'Frais de paiement', 'Cout additionnel', 'Profit net', 'Marge %' ) );
 
 		foreach ( $data['orders'] as $row ) {
 			fputcsv(
@@ -228,8 +228,8 @@ class WPA_Admin {
 	 * @return array
 	 */
 	private function get_range_params( $method = 'get' ) {
-		$settings = WPA_Settings::get();
-		$range    = wpa_get_request_text( 'range', $method );
+		$settings = ST404_WPA_Settings::get();
+		$range    = st404_wpa_get_request_text( 'range', $method );
 		if ( ! $range ) {
 			$range = $settings['dashboard_default_range'] ?? '30_days';
 		}
@@ -252,8 +252,8 @@ class WPA_Admin {
 				$from = $today->modify( 'first day of this month' )->format( 'Y-m-d' );
 				break;
 			case 'custom':
-				$from = wpa_sanitize_date( wpa_get_request_text( 'from', $method ) );
-				$to   = wpa_sanitize_date( wpa_get_request_text( 'to', $method ) );
+				$from = st404_wpa_sanitize_date( st404_wpa_get_request_text( 'from', $method ) );
+				$to   = st404_wpa_sanitize_date( st404_wpa_get_request_text( 'to', $method ) );
 				if ( ! $from || ! $to ) {
 					$from  = $today->sub( new DateInterval( 'P29D' ) )->format( 'Y-m-d' );
 					$to    = $today->format( 'Y-m-d' );

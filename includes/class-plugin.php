@@ -9,26 +9,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Plugin {
+class ST404_WPA_Plugin {
 
 	/**
 	 * Singleton instance.
 	 *
-	 * @var WPA_Plugin|null
+	 * @var ST404_WPA_Plugin|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Calculator.
 	 *
-	 * @var WPA_Calculator
+	 * @var ST404_WPA_Calculator
 	 */
 	private $calculator;
 
 	/**
 	 * Get singleton.
 	 *
-	 * @return WPA_Plugin
+	 * @return ST404_WPA_Plugin
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -41,7 +41,7 @@ class WPA_Plugin {
 	 * Constructor.
 	 */
 	private function __construct() {
-		$this->calculator = new WPA_Calculator();
+		$this->calculator = new ST404_WPA_Calculator();
 	}
 
 	/**
@@ -86,17 +86,17 @@ class WPA_Plugin {
 			return;
 		}
 
-		( new WPA_Database() )->init();
-		( new WPA_Assets() )->init();
-		( new WPA_Settings() )->init();
+		( new ST404_WPA_Database() )->init();
+		( new ST404_WPA_Assets() )->init();
+		( new ST404_WPA_Settings() )->init();
 
-		$product_profit = new WPA_Product_Profit( $this->calculator );
+		$product_profit = new ST404_WPA_Product_Profit( $this->calculator );
 		$product_profit->init();
 
-		$order_profit = new WPA_Order_Profit( $this->calculator );
+		$order_profit = new ST404_WPA_Order_Profit( $this->calculator );
 		$order_profit->init();
 
-		$admin = new WPA_Admin( $this->calculator, $product_profit );
+		$admin = new ST404_WPA_Admin( $this->calculator, $product_profit );
 		$admin->init();
 	}
 

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Activator {
+class ST404_WPA_Activator {
 
 	/**
 	 * Activation callback.

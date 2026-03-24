@@ -9,21 +9,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Order_Profit {
+class ST404_WPA_Order_Profit {
 
 	/**
 	 * Calculator.
 	 *
-	 * @var WPA_Calculator
+	 * @var ST404_WPA_Calculator
 	 */
 	private $calculator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param WPA_Calculator $calculator Calculator.
+	 * @param ST404_WPA_Calculator $calculator Calculator.
 	 */
-	public function __construct( WPA_Calculator $calculator ) {
+	public function __construct( ST404_WPA_Calculator $calculator ) {
 		$this->calculator = $calculator;
 	}
 
@@ -95,10 +95,10 @@ class WPA_Order_Profit {
 		wp_nonce_field( 'wpa_save_order_profit', 'wpa_order_profit_nonce' );
 		?>
 		<div class="wpa-order-box">
-			<p><strong><?php echo esc_html__( 'Chiffre d'affaires', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( wpa_price( $metrics['revenue'] ) ); ?></p>
-			<p><strong><?php echo esc_html__( 'Cout produit', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( wpa_price( $metrics['product_cost'] ) ); ?></p>
-			<p><strong><?php echo esc_html__( 'Profit brut', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( wpa_price( $metrics['gross_profit'] ) ); ?></p>
-			<p><strong><?php echo esc_html__( 'Profit net', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( wpa_price( $metrics['net_profit'] ) ); ?></p>
+			<p><strong><?php echo esc_html__( 'Chiffre d\'affaires', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( st404_wpa_price( $metrics['revenue'] ) ); ?></p>
+			<p><strong><?php echo esc_html__( 'Cout produit', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( st404_wpa_price( $metrics['product_cost'] ) ); ?></p>
+			<p><strong><?php echo esc_html__( 'Profit brut', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( st404_wpa_price( $metrics['gross_profit'] ) ); ?></p>
+			<p><strong><?php echo esc_html__( 'Profit net', 'wc-profit-analyzer' ); ?>:</strong> <?php echo wp_kses_post( st404_wpa_price( $metrics['net_profit'] ) ); ?></p>
 			<p><strong><?php echo esc_html__( 'Marge %', 'wc-profit-analyzer' ); ?>:</strong> <?php echo esc_html( number_format_i18n( $metrics['margin'], 2 ) ); ?>%</p>
 			<hr />
 			<p>
@@ -140,9 +140,9 @@ class WPA_Order_Profit {
 			return;
 		}
 
-		$order->update_meta_data( '_wpa_shipping_cost', (string) wpa_sanitize_decimal( wpa_get_request_text( 'wpa_shipping_cost', 'post' ) ) );
-		$order->update_meta_data( '_wpa_payment_fee', (string) wpa_sanitize_decimal( wpa_get_request_text( 'wpa_payment_fee', 'post' ) ) );
-		$order->update_meta_data( '_wpa_extra_cost', (string) wpa_sanitize_decimal( wpa_get_request_text( 'wpa_extra_cost', 'post' ) ) );
+		$order->update_meta_data( '_wpa_shipping_cost', (string) st404_wpa_sanitize_decimal( st404_wpa_get_request_text( 'wpa_shipping_cost', 'post' ) ) );
+		$order->update_meta_data( '_wpa_payment_fee', (string) st404_wpa_sanitize_decimal( st404_wpa_get_request_text( 'wpa_payment_fee', 'post' ) ) );
+		$order->update_meta_data( '_wpa_extra_cost', (string) st404_wpa_sanitize_decimal( st404_wpa_get_request_text( 'wpa_extra_cost', 'post' ) ) );
 		$order->update_meta_data( '_wpa_profit_note', sanitize_textarea_field( wp_unslash( $_POST['wpa_profit_note'] ?? '' ) ) );
 		$order->save();
 
@@ -166,7 +166,7 @@ class WPA_Order_Profit {
 	 * @return array
 	 */
 	public function add_order_columns( $columns ) {
-		$settings = WPA_Settings::get();
+		$settings = ST404_WPA_Settings::get();
 		if ( 'yes' !== ( $settings['enable_order_columns'] ?? 'yes' ) ) {
 			return $columns;
 		}
@@ -250,7 +250,7 @@ class WPA_Order_Profit {
 		return sprintf(
 			'<span class="wpa-profit-badge %1$s">%2$s</span>',
 			esc_attr( $class ),
-			wp_kses_post( wpa_price( $profit ) )
+			wp_kses_post( st404_wpa_price( $profit ) )
 		);
 	}
 }

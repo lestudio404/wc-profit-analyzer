@@ -9,10 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * GitHub updater class.
- */
-class ST404_WPA_GitHub_Updater {
+if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
+	/**
+	 * GitHub updater class.
+	 */
+	class ST404_WPA_GitHub_Updater {
 
 	/**
 	 * Plugin file basename.
@@ -227,16 +228,20 @@ class ST404_WPA_GitHub_Updater {
 
 		return $response;
 	}
-}
+	}
 
-add_action(
-	'plugins_loaded',
-	static function() {
-		if ( ! defined( 'WPA_PLUGIN_BASENAME' ) || ! defined( 'WPA_VERSION' ) ) {
-			return;
-		}
-		$updater = new ST404_WPA_GitHub_Updater( WPA_PLUGIN_BASENAME, WPA_VERSION );
-		$updater->init();
-	},
-	30
-);
+	add_action(
+		'plugins_loaded',
+		static function() {
+			if ( ! defined( 'WPA_PLUGIN_BASENAME' ) || ! defined( 'WPA_VERSION' ) ) {
+				return;
+			}
+			if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
+				return;
+			}
+			$updater = new ST404_WPA_GitHub_Updater( WPA_PLUGIN_BASENAME, WPA_VERSION );
+			$updater->init();
+		},
+		30
+	);
+}

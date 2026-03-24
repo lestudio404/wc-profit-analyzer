@@ -47,9 +47,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="wpa-panel" style="margin-top:16px;">
 		<h2><?php echo esc_html__( '5) Formules utilisées', 'wc-profit-analyzer' ); ?></h2>
 		<ul>
-			<li><code><?php echo esc_html__( 'Profit brut = Chiffre d'affaires - Cout produit', 'wc-profit-analyzer' ); ?></code></li>
-			<li><code><?php echo esc_html__( 'Profit net = Chiffre d'affaires - Cout produit - Cout expedition - Frais de paiement - Cout additionnel', 'wc-profit-analyzer' ); ?></code></li>
-			<li><code><?php echo esc_html__( 'Marge % = (Profit net / Chiffre d'affaires) * 100', 'wc-profit-analyzer' ); ?></code></li>
+			<li><code><?php echo esc_html__( 'Profit brut = Chiffre d\'affaires - Cout produit', 'wc-profit-analyzer' ); ?></code></li>
+			<li><code><?php echo esc_html__( 'Profit net = Chiffre d\'affaires - Cout produit - Cout expedition - Frais de paiement - Cout additionnel', 'wc-profit-analyzer' ); ?></code></li>
+			<li><code><?php echo esc_html__( 'Marge % = (Profit net / Chiffre d\'affaires) * 100', 'wc-profit-analyzer' ); ?></code></li>
 		</ul>
 	</div>
 

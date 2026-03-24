@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Profit Analyzer
  * Description: Analyze WooCommerce order and product profitability with configurable costs and margin insights.
- * Version: 1.0.4
+ * Version: 1.1.0
  * Author: ST404
  * Text Domain: wc-profit-analyzer
  * Domain Path: /languages
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPA_VERSION', '1.0.4' );
+define( 'WPA_VERSION', '1.1.0' );
 define( 'WPA_PLUGIN_FILE', __FILE__ );
 define( 'WPA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -37,16 +37,16 @@ require_once WPA_PLUGIN_DIR . 'includes/class-product-profit.php';
 require_once WPA_PLUGIN_DIR . 'includes/class-admin.php';
 require_once WPA_PLUGIN_DIR . 'includes/class-plugin.php';
 
-register_activation_hook( __FILE__, array( 'WPA_Activator', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'WPA_Deactivator', 'deactivate' ) );
+register_activation_hook( __FILE__, array( 'ST404_WPA_Activator', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'ST404_WPA_Deactivator', 'deactivate' ) );
 
 /**
  * Boot plugin.
  *
  * @return void
  */
-function wpa_boot_plugin() {
-	WPA_Plugin::instance()->run();
+function st404_wpa_boot_plugin() {
+	ST404_WPA_Plugin::instance()->run();
 }
 
-wpa_boot_plugin();
+st404_wpa_boot_plugin();

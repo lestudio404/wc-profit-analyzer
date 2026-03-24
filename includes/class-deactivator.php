@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Deactivator {
+class ST404_WPA_Deactivator {
 
 	/**
 	 * Deactivation callback.

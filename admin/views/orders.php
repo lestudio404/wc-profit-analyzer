@@ -54,12 +54,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<tr>
 				<td><a href="<?php echo esc_url( admin_url( 'post.php?post=' . absint( $row['order_id'] ) . '&action=edit' ) ); ?>">#<?php echo esc_html( (string) $row['order_id'] ); ?></a></td>
 				<td><?php echo esc_html( $row['date'] ); ?></td>
-				<td><?php echo wp_kses_post( wpa_price( $row['revenue'] ) ); ?></td>
-				<td><?php echo wp_kses_post( wpa_price( $row['product_cost'] ) ); ?></td>
-				<td><?php echo wp_kses_post( wpa_price( $row['shipping'] ) ); ?></td>
-				<td><?php echo wp_kses_post( wpa_price( $row['payment'] ) ); ?></td>
-				<td><?php echo wp_kses_post( wpa_price( $row['extra'] ) ); ?></td>
-				<td><?php echo wp_kses_post( wpa_price( $row['net_profit'] ) ); ?></td>
+				<td><?php echo wp_kses_post( st404_wpa_price( $row['revenue'] ) ); ?></td>
+				<td><?php echo wp_kses_post( st404_wpa_price( $row['product_cost'] ) ); ?></td>
+				<td><?php echo wp_kses_post( st404_wpa_price( $row['shipping'] ) ); ?></td>
+				<td><?php echo wp_kses_post( st404_wpa_price( $row['payment'] ) ); ?></td>
+				<td><?php echo wp_kses_post( st404_wpa_price( $row['extra'] ) ); ?></td>
+				<td><?php echo wp_kses_post( st404_wpa_price( $row['net_profit'] ) ); ?></td>
 				<td><?php echo esc_html( number_format_i18n( $row['margin'], 2 ) ); ?>%</td>
 			</tr>
 		<?php endforeach; ?>

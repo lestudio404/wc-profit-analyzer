@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Database {
+class ST404_WPA_Database {
 
 	/**
 	 * Init db layer.

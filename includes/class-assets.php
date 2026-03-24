@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPA_Assets {
+class ST404_WPA_Assets {
 
 	/**
 	 * Register hooks.

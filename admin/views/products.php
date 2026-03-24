@@ -46,10 +46,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<tr>
 					<td><a href="<?php echo esc_url( admin_url( 'post.php?post=' . absint( $row['product_id'] ) . '&action=edit' ) ); ?>"><?php echo esc_html( $row['name'] ); ?></a></td>
 					<td><?php echo esc_html( $row['sku'] ?: '-' ); ?></td>
-					<td><?php echo wp_kses_post( wpa_price( $row['purchase_cost'] ) ); ?></td>
+					<td><?php echo wp_kses_post( st404_wpa_price( $row['purchase_cost'] ) ); ?></td>
 					<td><?php echo esc_html( (string) $row['qty'] ); ?></td>
-					<td><?php echo wp_kses_post( wpa_price( $row['revenue'] ) ); ?></td>
-					<td><?php echo wp_kses_post( wpa_price( $row['profit'] ) ); ?></td>
+					<td><?php echo wp_kses_post( st404_wpa_price( $row['revenue'] ) ); ?></td>
+					<td><?php echo wp_kses_post( st404_wpa_price( $row['profit'] ) ); ?></td>
 					<td><?php echo esc_html( number_format_i18n( $row['margin'], 2 ) ); ?>%</td>
 				</tr>
 			<?php endforeach; ?>
