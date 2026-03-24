@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * GitHub updater class.
  */
-class WPA_GitHub_Updater {
+class ST404_WPA_GitHub_Updater {
 
 	/**
 	 * Plugin file basename.
@@ -235,7 +235,7 @@ add_action(
 		if ( ! defined( 'WPA_PLUGIN_BASENAME' ) || ! defined( 'WPA_VERSION' ) ) {
 			return;
 		}
-		$updater = new WPA_GitHub_Updater( WPA_PLUGIN_BASENAME, WPA_VERSION );
+		$updater = new ST404_WPA_GitHub_Updater( WPA_PLUGIN_BASENAME, WPA_VERSION );
 		$updater->init();
 	},
 	30
