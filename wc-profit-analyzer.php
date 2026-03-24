@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Profit Analyzer
  * Description: Analyze WooCommerce order and product profitability with configurable costs and margin insights.
- * Version: 1.1.1
+ * Version: 1.1.3
  * Author: ST404
  * Text Domain: wc-profit-analyzer
  * Domain Path: /languages
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPA_VERSION', '1.1.1' );
+define( 'WPA_VERSION', '1.1.3' );
 define( 'WPA_PLUGIN_FILE', __FILE__ );
 define( 'WPA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
