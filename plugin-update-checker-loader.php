@@ -60,12 +60,39 @@ if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
 	 * @return void
 	 */
 	public function init() {
+		add_action( 'init', array( $this, 'maybe_invalidate_cached_release' ), 0 );
 		// WordPress ne reconstruit le transient que périodique~12 h : sans ce filtre,
 		// la mise à jour GitHub n'apparaît pas à la lecture du cache (comportement PUC).
 		add_filter( 'site_transient_update_plugins', array( $this, 'filter_update_transient' ), 10, 1 );
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'filter_update_transient' ), 10, 1 );
 		add_filter( 'plugins_api', array( $this, 'plugins_api' ), 20, 3 );
 		add_filter( 'upgrader_post_install', array( $this, 'after_install' ), 10, 3 );
+	}
+
+	/**
+	 * Invalide le cache GitHub sur Plugins / Mises a jour / Tableau de bord (comportement proche de PUC / BOGO).
+	 *
+	 * @return void
+	 */
+	public function maybe_invalidate_cached_release() {
+		if ( ! is_admin() ) {
+			return;
+		}
+		global $pagenow;
+		if ( empty( $pagenow ) || ! is_string( $pagenow ) ) {
+			return;
+		}
+		if ( ! in_array( $pagenow, array( 'plugins.php', 'update-core.php', 'index.php' ), true ) ) {
+			return;
+		}
+		$this->clear_release_transient();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function clear_release_transient() {
+		delete_site_transient( 'wpa_github_release_' . md5( $this->owner . '/' . $this->repo ) );
 	}
 
 	/**
@@ -76,12 +103,26 @@ if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
 	private function get_headers() {
 		$headers = array(
 			'Accept'     => 'application/vnd.github+json',
-			'User-Agent' => 'WPA-Updater',
+			'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url( '/' ),
 		);
 
-		$token = defined( 'WPA_GITHUB_TOKEN' ) ? WPA_GITHUB_TOKEN : getenv( 'GITHUB_TOKEN' );
-		if ( ! empty( $token ) ) {
-			$headers['Authorization'] = 'token ' . $token;
+		$token = '';
+		if ( defined( 'ST404_WPA_GITHUB_TOKEN' ) && ST404_WPA_GITHUB_TOKEN ) {
+			$token = (string) ST404_WPA_GITHUB_TOKEN;
+		} elseif ( defined( 'WPA_GITHUB_TOKEN' ) && WPA_GITHUB_TOKEN ) {
+			$token = (string) WPA_GITHUB_TOKEN;
+		}
+		if ( ! $token && function_exists( 'getenv' ) ) {
+			$env = getenv( 'GITHUB_TOKEN' );
+			if ( is_string( $env ) && '' !== $env ) {
+				$token = $env;
+			}
+		}
+
+		$token = apply_filters( 'wpa_github_api_token', $token, $this->owner, $this->repo );
+
+		if ( '' !== $token ) {
+			$headers['Authorization'] = 'Bearer ' . $token;
 		}
 		return $headers;
 	}
@@ -118,7 +159,8 @@ if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
 			return null;
 		}
 
-		set_site_transient( $cache_key, $data, 15 * MINUTE_IN_SECONDS );
+		// TTL court : sans auth, GitHub limite vite ; avec invalidation sur plugins/mises a jour, on reste reactif.
+		set_site_transient( $cache_key, $data, 5 * MINUTE_IN_SECONDS );
 		return $data;
 	}
 
@@ -249,6 +291,6 @@ if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
 			$updater = new ST404_WPA_GitHub_Updater( WPA_PLUGIN_BASENAME, WPA_VERSION );
 			$updater->init();
 		},
-		30
+		10
 	);
 }
