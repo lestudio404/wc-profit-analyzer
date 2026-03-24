@@ -60,7 +60,10 @@ if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
 	 * @return void
 	 */
 	public function init() {
-		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_for_updates' ) );
+		// WordPress ne reconstruit le transient que périodique~12 h : sans ce filtre,
+		// la mise à jour GitHub n'apparaît pas à la lecture du cache (comportement PUC).
+		add_filter( 'site_transient_update_plugins', array( $this, 'filter_update_transient' ), 10, 1 );
+		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'filter_update_transient' ), 10, 1 );
 		add_filter( 'plugins_api', array( $this, 'plugins_api' ), 20, 3 );
 		add_filter( 'upgrader_post_install', array( $this, 'after_install' ), 10, 3 );
 	}
@@ -120,14 +123,17 @@ if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
 	}
 
 	/**
-	 * Check updates.
+	 * Merge GitHub release info whenever WordPress lit ou enregistre update_plugins.
 	 *
-	 * @param object $transient Plugins update transient.
-	 * @return object
+	 * @param object|false $transient Plugins update transient.
+	 * @return object|false
 	 */
-	public function check_for_updates( $transient ) {
+	public function filter_update_transient( $transient ) {
 		if ( ! is_object( $transient ) ) {
-			return $transient;
+			$transient = new stdClass();
+		}
+		if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
+			$transient->response = array();
 		}
 
 		$release = $this->get_latest_release();
@@ -137,6 +143,7 @@ if ( ! class_exists( 'ST404_WPA_GitHub_Updater' ) ) {
 
 		$latest_version = ltrim( (string) $release['tag_name'], 'v' );
 		if ( version_compare( $latest_version, $this->version, '<=' ) ) {
+			unset( $transient->response[ $this->plugin_basename ] );
 			return $transient;
 		}
 
