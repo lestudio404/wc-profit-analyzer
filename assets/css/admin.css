@@ -1,0 +1,64 @@
+.wpa-wrap .wpa-filter-bar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin: 12px 0 20px;
+}
+
+.wpa-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
+.wpa-card {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 12px;
+}
+
+.wpa-card h3 {
+	margin: 0 0 8px;
+	font-size: 13px;
+	color: #50575e;
+}
+
+.wpa-card p {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.wpa-grid-2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+.wpa-panel {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	padding: 12px;
+}
+
+.wpa-profit-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.wpa-badge-positive { background: #d1e7dd; color: #0f5132; }
+.wpa-badge-low { background: #fff3cd; color: #7a5b00; }
+.wpa-badge-negative { background: #f8d7da; color: #842029; }
+.wpa-badge-neutral { background: #e2e3e5; color: #41464b; }
+
+@media (max-width: 960px) {
+	.wpa-grid-2 {
+		grid-template-columns: 1fr;
+	}
+}
