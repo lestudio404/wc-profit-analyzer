@@ -4,7 +4,7 @@ Tags: woocommerce, profit, margin, analytics, reporting
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,9 @@ Yes, the plugin declares compatibility with WooCommerce custom order tables (HPO
 The plugin treats missing purchase cost as 0.
 
 == Changelog ==
+
+= 1.1.1 =
+* Version de test pour verifier le mecanisme de mise a jour GitHub en conditions reelles.
 
 = 1.1.0 =
 * Stabilisation complete post-correctifs: anti-collisions de symboles PHP, apostrophes echappees, interface FR harmonisee et reactivation des mises a jour GitHub.
