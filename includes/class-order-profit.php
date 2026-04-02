@@ -35,6 +35,7 @@ class ST404_WPA_Order_Profit {
 	public function init() {
 		add_action( 'add_meta_boxes', array( $this, 'register_order_metabox' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_order_profit_fields' ) );
+		add_action( 'woocommerce_before_order_object_save', array( $this, 'maybe_save_order_profit_fields_before_object_save' ), 10, 1 );
 		add_action( 'woocommerce_after_order_object_save', array( $this, 'refresh_cache_after_order_save' ) );
 
 		add_filter( 'manage_edit-shop_order_columns', array( $this, 'add_order_columns' ), 30 );
@@ -50,6 +51,19 @@ class ST404_WPA_Order_Profit {
 	 * @return void
 	 */
 	public function register_order_metabox() {
+		// Ne pas ajouter les 2 metaboxes sur le même écran.
+		if ( $this->is_hpos_enabled() && function_exists( 'wc_get_page_screen_id' ) ) {
+			add_meta_box(
+				'wpa_order_profit',
+				esc_html__( 'Analyse de rentabilite', 'wc-profit-analyzer' ),
+				array( $this, 'render_order_metabox' ),
+				wc_get_page_screen_id( 'shop-order' ),
+				'side',
+				'default'
+			);
+			return;
+		}
+
 		add_meta_box(
 			'wpa_order_profit',
 			esc_html__( 'Analyse de rentabilite', 'wc-profit-analyzer' ),
@@ -58,17 +72,18 @@ class ST404_WPA_Order_Profit {
 			'side',
 			'default'
 		);
+	}
 
-		if ( function_exists( 'wc_get_page_screen_id' ) ) {
-			add_meta_box(
-				'wpa_order_profit_hpos',
-				esc_html__( 'Analyse de rentabilite', 'wc-profit-analyzer' ),
-				array( $this, 'render_order_metabox' ),
-				wc_get_page_screen_id( 'shop-order' ),
-				'side',
-				'default'
-			);
+	/**
+	 * HPOS status helper.
+	 *
+	 * @return bool
+	 */
+	private function is_hpos_enabled() {
+		if ( ! class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' ) ) {
+			return false;
 		}
+		return (bool) \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 	}
 
 	/**
@@ -131,7 +146,7 @@ class ST404_WPA_Order_Profit {
 		if ( ! current_user_can( 'edit_shop_orders' ) && ! current_user_can( 'edit_shop_order', $order_id ) ) {
 			return;
 		}
-		if ( ! isset( $_POST['wpa_order_profit_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wpa_order_profit_nonce'] ) ), 'wpa_save_order_profit' ) ) {
+		if ( ! $this->is_order_profit_post_request() ) {
 			return;
 		}
 
@@ -140,13 +155,58 @@ class ST404_WPA_Order_Profit {
 			return;
 		}
 
+		$this->update_profit_fields_on_order( $order );
+		$order->save();
+
+		$this->calculator->refresh_cached_metrics( $order );
+	}
+
+	/**
+	 * Save fields in HPOS flow (order object save).
+	 *
+	 * @param WC_Order $order Order object.
+	 * @return void
+	 */
+	public function maybe_save_order_profit_fields_before_object_save( $order ) {
+		if ( ! $order instanceof WC_Order ) {
+			return;
+		}
+		$order_id = (int) $order->get_id();
+		if ( $order_id <= 0 ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_shop_orders' ) && ! current_user_can( 'edit_shop_order', $order_id ) ) {
+			return;
+		}
+		if ( ! $this->is_order_profit_post_request() ) {
+			return;
+		}
+
+		$this->update_profit_fields_on_order( $order );
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_order_profit_post_request() {
+		if ( ! isset( $_POST['wpa_order_profit_nonce'] ) ) {
+			return false;
+		}
+		return (bool) wp_verify_nonce(
+			sanitize_text_field( wp_unslash( $_POST['wpa_order_profit_nonce'] ) ),
+			'wpa_save_order_profit'
+		);
+	}
+
+	/**
+	 * @param WC_Order $order Order object.
+	 * @return void
+	 */
+	private function update_profit_fields_on_order( $order ) {
 		$order->update_meta_data( '_wpa_shipping_cost', (string) st404_wpa_sanitize_decimal( st404_wpa_get_request_text( 'wpa_shipping_cost', 'post' ) ) );
 		$order->update_meta_data( '_wpa_payment_fee', (string) st404_wpa_sanitize_decimal( st404_wpa_get_request_text( 'wpa_payment_fee', 'post' ) ) );
 		$order->update_meta_data( '_wpa_extra_cost', (string) st404_wpa_sanitize_decimal( st404_wpa_get_request_text( 'wpa_extra_cost', 'post' ) ) );
 		$order->update_meta_data( '_wpa_profit_note', sanitize_textarea_field( wp_unslash( $_POST['wpa_profit_note'] ?? '' ) ) );
-		$order->save();
-
-		$this->calculator->refresh_cached_metrics( $order );
 	}
 
 	/**
