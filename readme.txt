@@ -4,7 +4,7 @@ Tags: woocommerce, profit, margin, analytics, reporting
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,9 @@ Yes, the plugin declares compatibility with WooCommerce custom order tables (HPO
 The plugin treats missing purchase cost as 0.
 
 == Changelog ==
+
+= 1.1.9 =
+* Calculs : le chiffre d'affaires inclut maintenant l'expedition payee par le client ; le cout d'expedition reste un cout reel saisi manuellement.
 
 = 1.1.8 =
 * Correctif commandes : metabox unique (plus de doublon) et sauvegarde des champs (HPOS inclus).

@@ -45,7 +45,7 @@ class ST404_WPA_Calculator {
 	}
 
 	/**
-	 * Revenue (products only) HT/TTC based on settings.
+	 * Revenue (products + shipping paid by customer) HT/TTC based on settings.
 	 *
 	 * @param WC_Order $order Order.
 	 * @return float
@@ -60,6 +60,11 @@ class ST404_WPA_Calculator {
 			$line_tax   = (float) $item->get_total_tax();
 			$revenue   += 'ttc' === $mode ? ( $line_total + $line_tax ) : $line_total;
 		}
+
+		// Shipping paid by the customer is part of revenue (distinct from the merchant carrier cost field).
+		$shipping_total = (float) $order->get_shipping_total();
+		$shipping_tax   = (float) $order->get_shipping_tax();
+		$revenue       += 'ttc' === $mode ? ( $shipping_total + $shipping_tax ) : $shipping_total;
 
 		return max( 0, $revenue );
 	}
@@ -93,7 +98,10 @@ class ST404_WPA_Calculator {
 	}
 
 	/**
-	 * Shipping cost from manual meta or fallback to order shipping.
+	 * Shipping cost from manual meta.
+	 *
+	 * Important: WooCommerce "shipping_total" is what the customer pays (revenue),
+	 * not the merchant's carrier cost. Using it as a cost would skew profitability.
 	 *
 	 * @param WC_Order $order Order.
 	 * @return float
@@ -108,12 +116,7 @@ class ST404_WPA_Calculator {
 		if ( '' !== $manual && null !== $manual ) {
 			return max( 0, st404_wpa_sanitize_decimal( $manual ) );
 		}
-
-		$mode = $settings['calc_mode'] ?? 'ht';
-		$base = (float) $order->get_shipping_total();
-		$tax  = (float) $order->get_shipping_tax();
-
-		return 'ttc' === $mode ? max( 0, $base + $tax ) : max( 0, $base );
+		return 0.0;
 	}
 
 	/**

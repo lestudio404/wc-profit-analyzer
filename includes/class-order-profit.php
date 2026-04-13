@@ -117,7 +117,7 @@ class ST404_WPA_Order_Profit {
 			<p><strong><?php echo esc_html__( 'Marge %', 'wc-profit-analyzer' ); ?>:</strong> <?php echo esc_html( number_format_i18n( $metrics['margin'], 2 ) ); ?>%</p>
 			<hr />
 			<p>
-				<label for="wpa_shipping_cost"><strong><?php echo esc_html__( 'Cout expedition', 'wc-profit-analyzer' ); ?></strong></label>
+				<label for="wpa_shipping_cost"><strong><?php echo esc_html__( 'Cout expedition (cout reel)', 'wc-profit-analyzer' ); ?></strong></label>
 				<input type="text" name="wpa_shipping_cost" id="wpa_shipping_cost" value="<?php echo esc_attr( $fields['shipping'] ); ?>" class="widefat" />
 			</p>
 			<p>
